@@ -33,6 +33,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="class" type="VARCHAR(255)"/>
+            <column name="class_id_type" type="VARCHAR(255)"/>
         </createTable>
 
         <!--
@@ -104,12 +105,12 @@
         <!--
           acl_class table after insert (example):
 
-          id   class
-          1    com.example.spring_acl_test.dashboard.Dashboard
+          id   class                                                  class_id_type
+          1    com.example.spring_acl_test.dashboard.Dashboard        com.example.spring_acl_test.dashboard.Dashboard
         -->
         <sql>
-            INSERT INTO acl_class (class)
-            SELECT 'com.example.spring_acl_test.dashboard.Dashboard'
+            INSERT INTO acl_class (class, class_id_type)
+            SELECT 'com.example.spring_acl_test.dashboard.Dashboard', 'com.example.spring_acl_test.dashboard.Dashboard'
                 WHERE NOT EXISTS (
             SELECT 1 FROM acl_class WHERE class = 'com.example.spring_acl_test.dashboard.Dashboard'
         );
@@ -203,6 +204,18 @@
             );
         </sql>
     </changeSet>
+
+    <changeSet id="6" author="luigi">
+        <comment>Create a view acl_class_view that aliases 'class' column as 'class_id_type'</comment>
+        <sql>
+            CREATE OR REPLACE VIEW acl_class_view AS
+            SELECT
+                id,
+                class AS class_id_type
+            FROM acl_class;
+        </sql>
+    </changeSet>
+
 
 
 

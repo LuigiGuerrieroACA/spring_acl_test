@@ -9,6 +9,7 @@
         <insert tableName="users">
             <column name="id" valueNumeric="1"/>
             <column name="name" value="admin"/>
+            <column name="password" value="admin"/>
             <column name="role" value="ADMIN"/>
         </insert>
     </changeSet>
@@ -17,6 +18,7 @@
         <insert tableName="users">
             <column name="id" valueNumeric="2"/>
             <column name="name" value="user1"/>
+            <column name="password" value="user1"/>
             <column name="role" value="USER"/>
         </insert>
     </changeSet>
