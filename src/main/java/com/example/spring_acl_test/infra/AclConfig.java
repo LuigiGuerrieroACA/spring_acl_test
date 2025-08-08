@@ -24,10 +24,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class AclConfig {
+
     @Autowired
-    DataSource dataSource;
+    public DataSource dataSource;
 
     @Bean
     public AclAuthorizationStrategy aclAuthorizationStrategy() {
@@ -47,36 +48,30 @@ public class AclConfig {
 
     @Bean
     public LookupStrategy lookupStrategy() {
-        var p = new BasicLookupStrategy(
+        return new BasicLookupStrategy(
                 dataSource,
                 aclCache(),
                 aclAuthorizationStrategy(),
                 new ConsoleAuditLogger()
         );
-        //jdbcMutableAclService.setAclClassIdSupported(true);
-        p.setAclClassIdSupported(true);
-        return p;
     }
 
-    @Bean
-    public JdbcMutableAclService aclService() {
-        // This is your ACL service that reads/writes ACL data from the DB
-        return new JdbcMutableAclService(dataSource, lookupStrategy(), aclCache());
-    }
-
-    @Bean
     public PermissionEvaluator permissionEvaluator() {
         return new LoggingPermissionEvaluator(new AclPermissionEvaluator(aclService()));
     }
 
+
     @Bean
-    public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
-        DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
-        handler.setPermissionEvaluator(permissionEvaluator());
-        return handler;
+    public JdbcMutableAclService aclService() {
+        return new JdbcMutableAclService(dataSource, lookupStrategy(), aclCache());
+    }
+
+    @Bean
+    public MethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler() {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setPermissionEvaluator(permissionEvaluator());
+        return expressionHandler;
     }
 
 
-
 }
-
