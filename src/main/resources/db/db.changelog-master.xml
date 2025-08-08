@@ -1,126 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="1" author="luigi">
+    <!-- Include domain tables -->
+    <include file="db.changelog-create-tables.xml" relativeToChangelogFile="true"/>
 
-        <!--
-        Table: acl_sid
-        Columns:
-          - id (BIGINT, PK, auto increment) : Unique ID for each security identity
-          - principal (BOOLEAN)             : True if SID represents a principal (user), false if it's a granted authority/role
-          - sid (VARCHAR(100))              : The username or role name
-        -->
-        <createTable tableName="acl_sid">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="principal" type="BOOLEAN"/>
-            <column name="sid" type="VARCHAR(100)"/>
-        </createTable>
+    <!-- Include initial data -->
+    <include file="db.changelog-initial-data.xml" relativeToChangelogFile="true"/>
 
-        <!--
-        Table: acl_class
-        Columns:
-          - id (BIGINT, PK, auto increment) : Unique ID for each domain object class
-          - class (VARCHAR(255))            : Fully-qualified class name of the domain object
-        -->
-        <createTable tableName="acl_class">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="class" type="VARCHAR(255)"/>
-        </createTable>
-
-        <!--
-        Table: acl_object_identity
-        Columns:
-          - id (BIGINT, PK, auto increment) : Unique ID for the object identity
-          - object_id_class (BIGINT)        : Foreign key to acl_class.id
-          - object_id_identity (VARCHAR(36)): The identifier of the domain object (often UUID or numeric ID)
-          - parent_object (BIGINT)          : Optional FK to another acl_object_identity.id for inheritance
-          - owner_sid (BIGINT)              : FK to acl_sid.id indicating the owner
-          - entries_inheriting (BOOLEAN)    : Whether this object inherits permissions from its parent
-        -->
-        <createTable tableName="acl_object_identity">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="object_id_class" type="BIGINT"/>
-            <column name="object_id_identity" type="VARCHAR(36)"/>
-            <column name="parent_object" type="BIGINT"/>
-            <column name="owner_sid" type="BIGINT"/>
-            <column name="entries_inheriting" type="BOOLEAN"/>
-        </createTable>
-
-        <!--
-        Table: acl_entry
-        Columns:
-          - id (BIGINT, PK, auto increment) : Unique ID for each access control entry
-          - acl_object_identity (BIGINT)    : FK to acl_object_identity.id
-          - ace_order (INT)                 : Order of this ACE in the list for the object
-          - sid (BIGINT)                     : FK to acl_sid.id for the grantee
-          - mask (INTEGER)                   : Bitmask representing permissions
-          - granting (BOOLEAN)               : True if granting permission, false if denying
-          - audit_success (BOOLEAN)          : Whether to audit successful grants
-          - audit_failure (BOOLEAN)          : Whether to audit failed grants
-        -->
-        <createTable tableName="acl_entry">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="acl_object_identity" type="BIGINT"/>
-            <column name="ace_order" type="INT"/>
-            <column name="sid" type="BIGINT"/>
-            <column name="mask" type="INTEGER"/>
-            <column name="granting" type="BOOLEAN"/>
-            <column name="audit_success" type="BOOLEAN"/>
-            <column name="audit_failure" type="BOOLEAN"/>
-        </createTable>
-    </changeSet>
-
-    <changeSet id="populate-acl-from-existing" author="you">
-        <sql>
-            -- Insert all users as ACL SIDs (security identities), skipping those already present
-            INSERT INTO acl_sid (principal, sid)
-            SELECT true, name FROM users
-            WHERE name NOT IN (SELECT sid FROM acl_sid);
-            -- Example contents of acl_sid after insert:
-            -- | id | principal | sid   |
-            -- |----|-----------|-------|
-            -- | 10 | true      | admin |
-            -- | 11 | false     | user  |
-
-
-            -- Insert the Dashboard class into acl_class if not present
-            INSERT INTO acl_class (class)
-            VALUES ('com.example.spring_acl_test.dashboard.Dashboard')
-                ON DUPLICATE KEY IGNORE;
-            -- Example contents of acl_class after insert:
-            -- | id | class                                           |
-            -- |----|-------------------------------------------------|
-            -- | 1  | com.example.spring_acl_test.dashboard.Dashboard |
-
-
-            -- Insert ACL Object Identities for all dashboards, owned by 'admin', skipping already existing ones
-            INSERT INTO acl_object_identity (object_id_class, object_id_identity, owner_sid, entries_inheriting)
-            SELECT
-                    (SELECT id FROM acl_class WHERE class = 'com.example.spring_acl_test.dashboard.Dashboard'),
-                    d.id,
-                    (SELECT id FROM acl_sid WHERE sid = 'admin' AND principal = true),
-                    true
-            FROM dashboard d
-            WHERE d.id NOT IN (SELECT object_id_identity FROM acl_object_identity);
-            -- Example contents of acl_object_identity after insert:
-            -- | id | object_id_class | object_id_identity | parent_object | owner_sid | entries_inheriting |
-            -- |----|-----------------|--------------------|---------------|-----------|--------------------|
-            -- | 1  | 1               | 1                  | NULL          | 10        | true               |
-            -- | 2  | 1               | 2                  | NULL          | 10        | true               |
-
-        </sql>
-    </changeSet>
+    <!-- Include ACL tables and data -->
+    <include file="db.changelog-acl.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
+
