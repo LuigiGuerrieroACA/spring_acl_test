@@ -7,7 +7,7 @@
 
     <changeSet id="insert-users-1" author="luigi">
         <insert tableName="users">
-            <column name="id" valueNumeric="1"/>
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440000"/>
             <column name="name" value="admin"/>
             <column name="password" value="admin"/>
             <column name="role" value="ADMIN"/>
@@ -16,7 +16,7 @@
 
     <changeSet id="insert-users-2" author="luigi">
         <insert tableName="users">
-            <column name="id" valueNumeric="2"/>
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440001"/>
             <column name="name" value="user1"/>
             <column name="password" value="user1"/>
             <column name="role" value="USER"/>
@@ -25,14 +25,14 @@
 
     <changeSet id="insert-dashboard-1" author="luigi">
         <insert tableName="dashboards">
-            <column name="id" valueNumeric="1"/>
+            <column name="id" value="550e8400-e29b-41d4-a716-446655450000"/>
             <column name="name" value="Dashboard 1"/>
         </insert>
     </changeSet>
 
     <changeSet id="insert-dashboard-2" author="luigi">
         <insert tableName="dashboards">
-            <column name="id" valueNumeric="2"/>
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440001"/>
             <column name="name" value="Dashboard 2"/>
         </insert>
     </changeSet>

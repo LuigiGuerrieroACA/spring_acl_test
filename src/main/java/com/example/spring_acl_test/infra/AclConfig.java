@@ -48,12 +48,14 @@ public class AclConfig {
 
     @Bean
     public LookupStrategy lookupStrategy() {
-        return new BasicLookupStrategy(
+        var lookupStrategy = new BasicLookupStrategy(
                 dataSource,
                 aclCache(),
                 aclAuthorizationStrategy(),
                 new ConsoleAuditLogger()
         );
+        lookupStrategy.setAclClassIdSupported(true);
+        return lookupStrategy;
     }
 
     public PermissionEvaluator permissionEvaluator() {
@@ -63,7 +65,9 @@ public class AclConfig {
 
     @Bean
     public JdbcMutableAclService aclService() {
-        return new JdbcMutableAclService(dataSource, lookupStrategy(), aclCache());
+        var jdbcMutableAclService = new JdbcMutableAclService(dataSource, lookupStrategy(), aclCache());
+        jdbcMutableAclService.setAclClassIdSupported(true);
+        return jdbcMutableAclService;
     }
 
     @Bean

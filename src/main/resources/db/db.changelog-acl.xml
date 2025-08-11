@@ -110,7 +110,7 @@
         -->
         <sql>
             INSERT INTO acl_class (class, class_id_type)
-            SELECT 'com.example.spring_acl_test.dashboard.Dashboard', 'com.example.spring_acl_test.dashboard.Dashboard'
+            SELECT 'com.example.spring_acl_test.dashboard.Dashboard', 'java.lang.String'
                 WHERE NOT EXISTS (
             SELECT 1 FROM acl_class WHERE class = 'com.example.spring_acl_test.dashboard.Dashboard'
         );
@@ -196,11 +196,11 @@
                 FALSE,
                 FALSE
             FROM acl_object_identity oi
-            WHERE oi.object_id_identity = '1'
+            WHERE oi.object_id_identity = '550e8400-e29b-41d4-a716-446655450000'
               AND NOT EXISTS (
                 SELECT 1 FROM acl_entry e
                 WHERE e.acl_object_identity = oi.id
-                  AND e.sid = (SELECT id FROM acl_sid WHERE sid = 'user' AND principal = TRUE)
+                  AND e.sid = (SELECT id FROM acl_sid WHERE sid = 'user1' AND principal = TRUE)
             );
         </sql>
     </changeSet>

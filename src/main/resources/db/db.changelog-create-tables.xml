@@ -8,7 +8,7 @@
     <!-- Create users table -->
     <changeSet id="create-users-table" author="luigi">
         <createTable tableName="users">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(100)">
@@ -26,7 +26,7 @@
     <!-- Create dashboards table -->
     <changeSet id="create-dashboards-table" author="luigi">
         <createTable tableName="dashboards">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">

@@ -7,11 +7,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-class UserDetailsServiceImpl implements UserDetailsService {
+class UserDetailServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;  // your JPA repo or DAO
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+    public UserDetailServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -19,7 +19,7 @@ class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userRepository.findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return new MyUserDetails(user);
+        return new UserDetailsImpl(user);
     }
 }
 

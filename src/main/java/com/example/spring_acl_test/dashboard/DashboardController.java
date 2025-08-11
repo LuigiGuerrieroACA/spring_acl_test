@@ -24,7 +24,7 @@ public class DashboardController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasPermission(T(java.lang.Long).valueOf(#id), 'com.example.spring_acl_test.dashboard.Dashboard', 'READ')")
+    @PreAuthorize("hasPermission(#id, 'com.example.spring_acl_test.dashboard.Dashboard', 'READ')")
     public ResponseEntity<Dashboard> findById(@PathVariable String id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
