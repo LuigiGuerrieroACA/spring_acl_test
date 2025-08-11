@@ -1,6 +1,5 @@
 package com.example.spring_acl_test.user;
 
-import com.example.spring_acl_test.infra.ACLEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "users")
-public class User implements ACLEntity {
+public class User {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -30,12 +29,10 @@ public class User implements ACLEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User()
-    {
+    public User() {
     }
 
-    public User(String name, String passwordHashed, Role role)
-    {
+    public User(String name, String passwordHashed, Role role) {
         this.name = name;
         this.passwordHashed = passwordHashed;
         this.role = role;
@@ -57,8 +54,4 @@ public class User implements ACLEntity {
         return role;
     }
 
-    @Override
-    public String getACLId() {
-        return "ACL-" + id;
-    }
 }

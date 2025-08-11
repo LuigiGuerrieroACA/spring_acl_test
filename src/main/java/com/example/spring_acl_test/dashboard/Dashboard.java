@@ -1,7 +1,6 @@
 package com.example.spring_acl_test.dashboard;
 
 
-import com.example.spring_acl_test.infra.ACLEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +15,7 @@ import org.springframework.data.domain.AbstractAggregateRoot;
 @AllArgsConstructor
 @Entity
 @Table(name = "dashboards")
-public class Dashboard extends AbstractAggregateRoot<Dashboard> implements ACLEntity {
+public class Dashboard extends AbstractAggregateRoot<Dashboard> {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -47,8 +46,4 @@ public class Dashboard extends AbstractAggregateRoot<Dashboard> implements ACLEn
         this.name = name;
     }
 
-    @Override
-    public String getACLId() {
-        return "ACL-" + id;
-    }
 }

@@ -10,7 +10,7 @@ public class DashboardIdProvider  implements ObjectIdProvider<Dashboard> {
 
     @Override
     public Serializable idOf(Dashboard object) {
-        return "ACL:"+object.getId();
+        return object.getId();
     }
 
 }
