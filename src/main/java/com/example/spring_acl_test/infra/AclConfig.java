@@ -12,7 +12,6 @@ import org.springframework.security.acls.AclPermissionEvaluator;
 import org.springframework.security.acls.domain.AclAuthorizationStrategy;
 import org.springframework.security.acls.domain.AclAuthorizationStrategyImpl;
 import org.springframework.security.acls.domain.ConsoleAuditLogger;
-import org.springframework.security.acls.domain.DefaultPermissionGrantingStrategy;
 import org.springframework.security.acls.domain.SpringCacheBasedAclCache;
 import org.springframework.security.acls.jdbc.BasicLookupStrategy;
 import org.springframework.security.acls.jdbc.JdbcMutableAclService;
@@ -35,10 +34,6 @@ public class AclConfig {
         return new AclAuthorizationStrategyImpl(new SimpleGrantedAuthority(Role.ADMIN.name()));
     }
 
-    @Bean
-    public PermissionGrantingStrategy permissionGrantingStrategy() {
-        return new DefaultPermissionGrantingStrategy(new ConsoleAuditLogger());
-    }
 
     @Bean
     public SpringCacheBasedAclCache aclCache() {
@@ -52,7 +47,7 @@ public class AclConfig {
                 dataSource,
                 aclCache(),
                 aclAuthorizationStrategy(),
-                new ConsoleAuditLogger()
+                permissionGrantingStrategy()
         );
         lookupStrategy.setAclClassIdSupported(true);
         return lookupStrategy;
@@ -60,6 +55,11 @@ public class AclConfig {
 
     public PermissionEvaluator permissionEvaluator() {
         return new LoggingPermissionEvaluator(new AclPermissionEvaluator(aclService()));
+    }
+
+    @Bean
+    public PermissionGrantingStrategy permissionGrantingStrategy() {
+        return new BitMaskPermissionGrantingStrategy(new ConsoleAuditLogger());
     }
 
 
