@@ -106,7 +106,7 @@
           acl_class table after insert (example):
 
           id   class                                                  class_id_type
-          1    com.example.spring_acl_test.dashboard.Dashboard        com.example.spring_acl_test.dashboard.Dashboard
+          1    com.example.spring_acl_test.dashboard.Dashboard        java.lang.String
         -->
         <sql>
             INSERT INTO acl_class (class, class_id_type)

@@ -62,7 +62,6 @@ public class AclConfig {
         return new BitMaskPermissionGrantingStrategy(new ConsoleAuditLogger());
     }
 
-
     @Bean
     public JdbcMutableAclService aclService() {
         var jdbcMutableAclService = new JdbcMutableAclService(dataSource, lookupStrategy(), aclCache());
