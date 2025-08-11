@@ -16,6 +16,7 @@ import org.springframework.security.acls.domain.SpringCacheBasedAclCache;
 import org.springframework.security.acls.jdbc.BasicLookupStrategy;
 import org.springframework.security.acls.jdbc.JdbcMutableAclService;
 import org.springframework.security.acls.jdbc.LookupStrategy;
+import org.springframework.security.acls.model.ObjectIdentityRetrievalStrategy;
 import org.springframework.security.acls.model.PermissionGrantingStrategy;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -53,8 +54,10 @@ public class AclConfig {
         return lookupStrategy;
     }
 
-    public PermissionEvaluator permissionEvaluator() {
-        return new LoggingPermissionEvaluator(new AclPermissionEvaluator(aclService()));
+    public PermissionEvaluator permissionEvaluator(ObjectIdentityRetrievalStrategy identityRetrievalStrategy) {
+        var permissionEvaluator = new AclPermissionEvaluator(aclService());
+        permissionEvaluator.setObjectIdentityRetrievalStrategy(identityRetrievalStrategy);
+        return new LoggingPermissionEvaluator(permissionEvaluator);
     }
 
     @Bean
@@ -70,9 +73,9 @@ public class AclConfig {
     }
 
     @Bean
-    public MethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler() {
+    public MethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler(ObjectIdentityRetrievalStrategy identityRetrievalStrategy) {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-        expressionHandler.setPermissionEvaluator(permissionEvaluator());
+        expressionHandler.setPermissionEvaluator(permissionEvaluator(identityRetrievalStrategy));
         return expressionHandler;
     }
 

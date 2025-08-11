@@ -1,5 +1,6 @@
 package com.example.spring_acl_test.user;
 
+import com.example.spring_acl_test.infra.ACLEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,8 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "users")
-public class User
-{
+public class User implements ACLEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -55,5 +55,10 @@ public class User
 
     public Role getRole() {
         return role;
+    }
+
+    @Override
+    public String getACLId() {
+        return "ACL-" + id;
     }
 }
