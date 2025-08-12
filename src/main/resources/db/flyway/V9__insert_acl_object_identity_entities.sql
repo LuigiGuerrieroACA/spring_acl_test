@@ -16,7 +16,7 @@ FROM dashboards d
          JOIN acl_object_identity parent_oi ON
     parent_oi.object_id_identity = 'DASHBOARD'
         AND parent_oi.object_id_class = (
-        SELECT id FROM acl_class WHERE class = 'com.example.spring_acl_test.dashboard.Dashboard'
+        SELECT id FROM acl_class WHERE class = 'com.example.spring_acl_test.acl.Resource'
     )
 WHERE NOT EXISTS (
     SELECT 1 FROM acl_object_identity aoi
