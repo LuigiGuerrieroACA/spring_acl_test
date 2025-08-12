@@ -1,4 +1,4 @@
-package com.example.spring_acl_test.infra;
+package com.example.spring_acl_test.acl;
 
 import java.io.Serializable;
 import java.util.Optional;

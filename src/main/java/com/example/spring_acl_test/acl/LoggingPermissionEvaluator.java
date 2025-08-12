@@ -1,4 +1,4 @@
-package com.example.spring_acl_test.infra;
+package com.example.spring_acl_test.acl;
 
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
