@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomObjectIdentityRetrievalStrategy implements org.springframework.security.acls.model.ObjectIdentityRetrievalStrategy {
 
-    private final List<ObjectIdProvider<?>> objectIdProviders;
+    private final List<ObjectIdProvider<?, ?>> objectIdProviders;
 
     @Override
     public ObjectIdentity getObjectIdentity(Object domainObject) {

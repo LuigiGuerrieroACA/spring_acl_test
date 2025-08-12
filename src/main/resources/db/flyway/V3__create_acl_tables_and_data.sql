@@ -15,7 +15,7 @@ CREATE TABLE acl_class (
 CREATE TABLE acl_object_identity (
                                      id BIGSERIAL PRIMARY KEY,
                                      object_id_class BIGINT NOT NULL,
-                                     object_id_identity VARCHAR(36) NOT NULL,
+                                     object_id_identity VARCHAR(255) NOT NULL,
                                      parent_object BIGINT,
                                      owner_sid BIGINT,
                                      entries_inheriting BOOLEAN NOT NULL,
