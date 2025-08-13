@@ -12,7 +12,6 @@ import java.util.List;
 public class DashboardController {
 
     private final DashboardService service;
-
     public DashboardController(DashboardService service) {
         this.service = service;
     }
@@ -30,5 +29,15 @@ public class DashboardController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-}
 
+    @PostMapping("/create")
+    public ResponseEntity<Dashboard> create() {
+        return ResponseEntity.ok(service.saveNew());
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}
