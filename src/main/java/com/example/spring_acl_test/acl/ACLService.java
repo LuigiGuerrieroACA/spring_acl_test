@@ -26,6 +26,7 @@ public class ACLService {
 
     private final JdbcMutableAclService jdbcMutableAclService;
     private final DashboardRepository dashboardService;
+
     private static final Permission ALL_RIGHTS = new Permission() {
         @Override
         public int getMask() {
@@ -151,10 +152,12 @@ public class ACLService {
     }
 
     private void clearPermissionsForSid(MutableAcl acl, Sid sid) {
-        IntStream.range(0, acl.getEntries().size())
-                .map(i -> acl.getEntries().size() - 1 - i)
+        List<Integer> toDelete = IntStream.range(0, acl.getEntries().size())
                 .filter(i -> acl.getEntries().get(i).getSid().equals(sid))
-                .forEach(acl::deleteAce);
+                .boxed()
+                .toList();
+
+        toDelete.forEach(acl::deleteAce);
     }
 
 
